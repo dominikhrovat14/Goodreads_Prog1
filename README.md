@@ -8,13 +8,13 @@ Analiziral bom 10.000 najbolje ocenjenih knjig s strani Goodreads (https://www.g
 Za vsako knjigo bom zajel:
 
 - Naslov knjige in leto izdaje
-- Avtorja, ilustratorja in založba knjige
+- Avtorja, ilustratorja(kjer bo na voljo)
 - Oceno knjige in število glasov
 - Opis in dolžino knjige
-- 3 žanre (in število glasov za vsak žanr)
+- žanre (in število glasov za vsak žanr)
 
 Delovne hipoteze:
-- Ali dolžina knjige vpliva na njeno oceno?
+- Kateri avtor je napisal največ uspešnih knjig?
 - Ali avtor in ilustrator knjige pogosto sovpadata?
 - Kateri žanri so najpopularnejši?
 
