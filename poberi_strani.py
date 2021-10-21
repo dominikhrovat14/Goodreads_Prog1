@@ -1,13 +1,14 @@
 import orodja
 import re
 import requests 
-stevilo_strani = 1
+stevilo_strani =100
 count = 0
 autorji = []
 ocene = []
-vsi_podatki = []
+knjige = []
 ilustratorji = []
 genre = []
+about = []
 
 
 
@@ -41,18 +42,9 @@ vzorec_title = (
     r'<a title="(.*)" href="/book/show/(?P<povezava>.*)">'
     )
 
-vzorec_autor = (
-    r'https://www.goodreads.com/author/show/(?P<autorID>.*?)\D*"><span itemprop="name">'
-    r'(?P<autor>.*?)</span>'
-    )
-
 vzorec_knjiga = (
     r'<span itemprop=\'name\' role=\'heading\' aria-level=\'4\'>'
     r'(?P<naslov>.*)</span>'
-    )
-
-vzorec_ocena = (
-    r'</span></span> (?P<ocena>.*?) avg rating &mdash; (?P<glasovi>.*?) ratings</span>'
     )
 
 
@@ -61,11 +53,11 @@ vzorec_ilustrator = (
     r'(\s*)(?P<naslov>.*)\n'
     r'</h1>(\n.*)+\n'
     r"<div class='authorName__container'>\n"
-    r'(.*)<span itemprop="name">(?P<avtor>.*)</span></a>(.*)?\n'
+    r'(.*)<span itemprop="name">(?P<autor>.*)</span></a>(.*)?\n'
     r'</div>\n'
     r"(.*)\n"
-    r'(.*)<span itemprop="name">'
-    r'(?P<ilustrator>.*)</span></a>'
+    r'((.*)<span itemprop="name">)?'
+    r'((?P<ilustrator>.*)</span></a>)?\n'
     )
 
 vzorec_genre = (
@@ -77,41 +69,67 @@ vzorec_genre = (
     r'\s*<a title="(.*)">(?P<genre_glasovi>.*)\susers</a>'
     )
 
+vzorec_about = (
+    r'<span itemprop="numberOfPages">(?P<dolzina>.*) pages</span></div>\n'
+    r'(\s)*\n'
+    r'\s*<div class="row">'
+    r'\s* Published'
+    r'\s*\D*(\d{0,3})?\D{0,3}\s(?P<izdano>.*)'
+    r'(.*\n)*'
+    r'\s*<div class="infoBoxRowItem">(?P<naslov>.*)</div>'
+    r'(.*\n)*'
+    r".*itemprop='inLanguage'>(?P<jezik>.*)</div>"
+    )
+
+
 
 for stran in range(stevilo_strani):
-    page_number = 1 + stran 
+    page_number = 1 + stran
     url = f'https://www.goodreads.com/list/show/1.Best_Books_Ever?page={page_number}'
     datoteka = f'najbolj-znane-knjige-stran/{page_number}.html'
-    vsebina = orodja.vsebina_datoteke(datoteka)
     #orodja.shrani_spletno_stran(url, datoteka)
+    vsebina = orodja.vsebina_datoteke(datoteka)
+    for zadetek in re.finditer(vzorec, vsebina):
+        print(zadetek)
+        knjige.append(zadetek.groupdict().copy())
+
+    '''        
     for podatek in re.finditer(vzorec_title, vsebina):
         link = podatek.groupdict()
-        url_1 = f'https://www.goodreads.com/book/show/{link["povezava"]}.html'
-        datoteka_1 = f'posamezne_knjige/{link["povezava"]}.html'
-        vsebina_1 = orodja.vsebina_datoteke(datoteka_1)
-        #orodja.shrani_spletno_stran(url_1, datoteka_1)
-##        for zadetek in re.finditer(vzorec_autor, vsebina):
-##            autorji.append(zadetek.groupdict().copy())
-##
-##        for zadetek in re.finditer(vzorec_ocena, vsebina):
-##            ocene.append(zadetek.groupdict().copy())
-##
-##        for zadetek in re.finditer(vzorec, vsebina):
-##            vsi_podatki.append(zadetek.groupdict().copy())
-##        for podatek in re.finditer(vzorec_ilustrator, vsebina_1):
-##            for zadetek in re.finditer(vzorec_ilustrator, vsebina_1):
-##                ilustratorji.append(zadetek.groupdict())
-        for zadetek in re.finditer(vzorec_genre, vsebina_1):
-            genre.append(zadetek.groupdict())
+        url_posamezne = f'https://www.goodreads.com/book/show/{link["povezava"]}.html'
+        datoteka_posamezne = f'posamezne_knjige/{link["povezava"]}.html'
+        #orodja.shrani_spletno_stran(url_posamezne, datoteka_posamezne)
+        vsebina_posamezne = orodja.vsebina_datoteke(datoteka_posamezne)
+        for zadetek in re.finditer(vzorec, vsebina):
+            vsi_podatki.append(zadetek.groupdict().copy())
+            '''
+            
+'''        
+        
+        for zadetek in re.finditer(vzorec_autor, vsebina):
+            autorji.append(zadetek.groupdict().copy())
 
-print(genre)
+            for zadetek in re.finditer(vzorec_ilustrator, vsebina_posamezne):
+            ilustratorji.append(zadetek.groupdict().copy())
+
+        
+        for zadetek in re.finditer(vzorec_about, vsebina_posamezne):
+            print(about)
+            about.append(zadetek.groupdict().copy())
+
+        
+                
+        for zadetek in re.finditer(vzorec_genre, vsebina_posamezne):
+            genre.append(zadetek.groupdict())'''
+
     
     
-##orodja.zapisi_csv(autorji, ['autorID', 'autor'], 'obdelani-podatki/autorji.csv')
-##orodja.zapisi_csv(ocene, ['ocena', 'glasovi'], 'obdelani-podatki/ocene.csv')
-##orodja.zapisi_csv(vsi_podatki, ['naslov', 'autorID', 'autor', 'ocena', 'glasovi'], 'obdelani-podatki/vsi_podatki.csv')
-##orodja.zapisi_csv(ilustratorji, ['naslov', 'avtor', 'ilustrator'], 'obdelani-podatki/ilustratorji.csv')
-orodja.zapisi_csv(genre, ['genre', 'genre_glasovi'], 'obdelani-podatki/genre.csv')
+#orodja.zapisi_csv(autorji, ['autorID', 'autor'], 'obdelani-podatki/autorji.csv')
+print("SEM TU")
+orodja.zapisi_csv(knjige, ['naslov', 'autorID', 'autor', 'ocena', 'glasovi'], 'obdelani-podatki/knj.csv')
+#orodja.zapisi_csv(ilustratorji, ['naslov', 'autor', 'ilustrator'], 'obdelani-podatki/ilustratorji.csv')
+#orodja.zapisi_csv(genre, ['genre', 'genre_glasovi'], 'obdelani-podatki/genre.csv')
+#orodja.zapisi_csv(about, ['naslov', 'izdano', 'dolzina', 'jezik'], 'obdelani-podatki/splosno.csv')
 
     
 
