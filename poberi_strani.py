@@ -47,7 +47,7 @@ vzorec_knjiga = (
     r'(?P<naslov>.*)</span>'
     )
 
-
+### SE NE UPORABLJA VEČ
 vzorec_ilustrator = (
     r'<h1 id="bookTitle" class="gr-h1 gr-h1--serif" itemprop="name">\n'
     r'(\s*)(?P<naslov>.*)\n'
@@ -124,12 +124,11 @@ for stran in range(stevilo_strani):
 
     
     
-#orodja.zapisi_csv(autorji, ['autorID', 'autor'], 'obdelani-podatki/autorji.csv')
-print("SEM TU")
+orodja.zapisi_csv(autorji, ['autorID', 'autor'], 'obdelani-podatki/autorji.csv')
 orodja.zapisi_csv(knjige, ['naslov', 'autorID', 'autor', 'ocena', 'glasovi'], 'obdelani-podatki/knj.csv')
-#orodja.zapisi_csv(ilustratorji, ['naslov', 'autor', 'ilustrator'], 'obdelani-podatki/ilustratorji.csv')
-#orodja.zapisi_csv(genre, ['genre', 'genre_glasovi'], 'obdelani-podatki/genre.csv')
-#orodja.zapisi_csv(about, ['naslov', 'izdano', 'dolzina', 'jezik'], 'obdelani-podatki/splosno.csv')
+orodja.zapisi_csv(ilustratorji, ['naslov', 'autor', 'ilustrator'], 'obdelani-podatki/ilustratorji.csv')
+orodja.zapisi_csv(genre, ['genre', 'genre_glasovi'], 'obdelani-podatki/genre.csv')
+orodja.zapisi_csv(about, ['naslov', 'izdano', 'dolzina', 'jezik'], 'obdelani-podatki/splosno.csv')
 
     
 
